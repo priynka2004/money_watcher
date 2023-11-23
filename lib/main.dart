@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:money_watcher/dashboard/provider/money_record_provider.dart';
+import 'package:money_watcher/dashboard/ui/dashboard_screen.dart';
 import 'package:money_watcher/login/provider/auth_provider.dart';
 import 'package:money_watcher/login/ui/login_screen.dart';
 import 'package:money_watcher/shared/app_colors.dart';
@@ -22,17 +24,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) {
-          return AuthProvider(databaseService);
-        })
+        ChangeNotifierProvider(
+          create: (context) {
+            return AuthProvider(databaseService);
+          },
+        ),ChangeNotifierProvider(
+          create: (context) {
+            return MoneyRecordProvider(databaseService);
+          },
+        ),
       ],
       child: MaterialApp(
-        title: appName,
+        title: appName,debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: appColorScheme),
           useMaterial3: true,
         ),
-        home: const LoginScreen(),
+        home: const DashboardScreen(),
       ),
     );
   }
