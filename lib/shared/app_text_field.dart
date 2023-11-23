@@ -23,6 +23,12 @@ class AppTextField extends StatelessWidget {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
           )),
+      validator: (value){
+        if(value == null || value.isEmpty){
+          return "Please enter some text";
+        }
+        return null;
+      },
     );
   }
 }

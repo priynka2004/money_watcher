@@ -19,6 +19,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
+  final fromKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,108 +34,113 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          register,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          userName,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        AppTextField(
-                          controller: nameController,
-                          hintText: nameFieldHint,
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        const Text(
-                          email,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        AppTextField(
-                          controller: emailController,
-                          hintText: emailFieldHint,
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        const Text(
-                          password,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        AppTextField(
-                          controller: passwordController,
-                          obscureText: authProvider.isVisible ? false : true,
-                          hintText: passwordFieldHint,
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.remove_red_eye),
-                            onPressed: () {
-                              authProvider.setPasswordFieldStatus();
-                            },
+                    Form(
+                      key: fromKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            register,
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        const Text(
-                          confirmPassword,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        AppTextField(
-                          controller: confirmPasswordController,
-                          obscureText: authProvider.isVisible ? false : true,
-                          hintText: confirmPassword,
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.remove_red_eye),
-                            onPressed: () {
-                              authProvider.setPasswordFieldStatus();
-                            },
+                          const SizedBox(height: 16),
+                          const Text(
+                            userName,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 24,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            registerUser();
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                                color: buttonBackground,
-                                borderRadius: BorderRadius.circular(24)),
-                            child: const Text(
-                              register,
-                              style: TextStyle(color: buttonTextColor),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          AppTextField(
+                            controller: nameController,
+                            hintText: nameFieldHint,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          const Text(
+                            email,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          AppTextField(
+                            controller: emailController,
+                            hintText: emailFieldHint,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          const Text(
+                            password,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          AppTextField(
+                            controller: passwordController,
+                            obscureText: authProvider.isVisible ? false : true,
+                            hintText: passwordFieldHint,
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.remove_red_eye),
+                              onPressed: () {
+                                authProvider.setPasswordFieldStatus();
+                              },
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          const Text(
+                            confirmPassword,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          AppTextField(
+                            controller: confirmPasswordController,
+                            obscureText: authProvider.isVisible ? false : true,
+                            hintText: confirmPassword,
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.remove_red_eye),
+                              onPressed: () {
+                                authProvider.setPasswordFieldStatus();
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              if(fromKey.currentState!.validate()) {
+                                registerUser();
+                              }
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                  color: buttonBackground,
+                                  borderRadius: BorderRadius.circular(24)),
+                              child: const Text(
+                                register,
+                                style: TextStyle(color: buttonTextColor),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     authProvider.isLoading
                         ? const CircularProgressIndicator()

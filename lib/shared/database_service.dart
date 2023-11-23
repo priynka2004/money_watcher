@@ -8,7 +8,7 @@ class DatabaseService {
   late Database database;
 
   Future initDatabase() async {
-    // Get a location using getDatabasesPath
+
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'money_tracker.db');
     database =
