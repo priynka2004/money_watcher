@@ -23,7 +23,7 @@ class AppTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
-      keyboardType: keyboardType,
+      keyboardType: keyboardType,textCapitalization: TextCapitalization.words,
       decoration: InputDecoration(
           hintText: hintText,
           suffixIcon: suffixIcon,

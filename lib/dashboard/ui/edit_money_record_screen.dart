@@ -9,14 +9,15 @@ import 'package:money_watcher/shared/app_util.dart';
 import 'package:money_watcher/shared/widget/radio_button_widget.dart';
 import 'package:provider/provider.dart';
 
-class AddMoneyRecordScreen extends StatefulWidget {
-  const AddMoneyRecordScreen({super.key});
+class EditMoneyRecordScreen extends StatefulWidget {
+  const EditMoneyRecordScreen({super.key, required this.moneyRecord});
+  final MoneyRecord moneyRecord;
 
   @override
-  AddMoneyRecordScreenState createState() => AddMoneyRecordScreenState();
+  EditMoneyRecordScreenState createState() => EditMoneyRecordScreenState();
 }
 
-class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
+class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   late String selectedCategory;
@@ -28,7 +29,11 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
 
   @override
   void initState() {
-    selectedCategory = categories[0];
+    selectedCategory = widget.moneyRecord.category;
+    titleController.text = widget.moneyRecord.title;
+    amountController.text = widget.moneyRecord.amount.toString();
+    selectedDate = widget.moneyRecord.date;
+    selectedType = widget.moneyRecord.type;
     super.initState();
   }
 
@@ -36,7 +41,7 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(addMoneyTitleText),
+        title: const Text(editMoneyTitleText),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -54,7 +59,7 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
               AppTextField(
                 controller: amountController,
                 keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                const TextInputType.numberWithOptions(decimal: true),
                 hintText: hintTextAmount,
               ),
               const SizedBox(height: 16),
@@ -72,7 +77,7 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
                     });
                   },
                   items:
-                      categories.map<DropdownMenuItem<String>>((String value) {
+                  categories.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -122,7 +127,7 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
               const SizedBox(height: 16),
               InkWell(
                 onTap: () async{
-                  await addMoneyRecord();
+                  await editMoneyRecord();
                   fetchMoneyRecord();
                 },
                 child: Container(
@@ -133,7 +138,7 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
                       color: buttonBackground,
                       borderRadius: BorderRadius.circular(24)),
                   child: const Text(
-                    addTextButton,
+                    editTextButton,
                     style: TextStyle(color: buttonTextColor),
                   ),
                 ),
@@ -160,8 +165,9 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
     }
   }
 
-  Future addMoneyRecord() async {
+  Future editMoneyRecord() async {
     MoneyRecord moneyRecord = MoneyRecord(
+      id: widget.moneyRecord.id,
       title: titleController.text,
       amount: double.parse(amountController.text),
       category: selectedCategory,
@@ -170,12 +176,13 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
     );
 
     final moneyProvider =
-        Provider.of<MoneyRecordProvider>(context, listen: false);
-    await moneyProvider.addMoneyRecord(moneyRecord);
+    Provider.of<MoneyRecordProvider>(context, listen: false);
+    await moneyProvider.editMoneyRecord(moneyRecord);
+    await moneyProvider.getMoneyRecords();
 
     if (moneyProvider.error == null) {
       if (mounted) {
-        AppUtil.showToast(recordAddMsg);
+        AppUtil.showToast(recordEditMsg);
         Navigator.pop(context);
       }
     }

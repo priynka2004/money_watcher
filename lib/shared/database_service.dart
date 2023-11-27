@@ -70,6 +70,33 @@ class DatabaseService {
     print('Money Record added successfully');
   }
 
+  Future<void> editMoneyRecord(MoneyRecord record) async {
+    await database.rawUpdate(
+      '''
+      UPDATE $moneyRecordTableName 
+      SET title = ?, amount = ?, category = ?, date = ?, type = ? 
+      WHERE id = ?
+      ''',
+      [
+        record.title,
+        record.amount,
+        record.category,
+        record.date,
+        record.type.toString(),
+        record.id,
+      ],
+    );
+    print('Money Record updated successfully');
+  }
+
+  Future deleteMoneyRecord(int id) async {
+    await database.rawInsert(
+      'delete from $moneyRecordTableName where id=?',
+      [id],
+    );
+    print('Money Record deleted successfully');
+  }
+
   Future<List<MoneyRecord>> getMoneyRecords() async {
     List<Map<String, dynamic>> records =
         await database.rawQuery('Select * from $moneyRecordTableName');
