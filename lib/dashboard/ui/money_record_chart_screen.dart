@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
 import 'package:money_watcher/dashboard/provider/money_record_provider.dart';
+import 'package:money_watcher/dashboard/ui/money_record_fitter_screen.dart';
 import 'package:provider/provider.dart';
 
 class MoneyRecordChartScreen extends StatefulWidget {
@@ -13,27 +14,35 @@ class MoneyRecordChartScreen extends StatefulWidget {
 
 class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
   List<MoneyRecord> recordList = [];
+  MoneyRecordType selectedType = MoneyRecordType
+      .expense;
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      fetchMoneyRecord(context);
-    });
     super.initState();
+    fetchMoneyRecord(context);
   }
 
-  Future fetchMoneyRecord(BuildContext context) async {
-    final moneyProvider = Provider.of<MoneyRecordProvider>(context, listen: false);
+  Future<void> fetchMoneyRecord(BuildContext context) async {
+    final moneyProvider = Provider.of<MoneyRecordProvider>(
+        context, listen: false);
     recordList = moneyProvider.moneyRecordList;
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    Map<String, double> expensesByCategory = getExpensesByCategory(recordList);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Money Record Chart'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _openFilterScreen(context);
+            },
+            icon: const Icon(Icons.filter_list),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -49,7 +58,7 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
                     swapAnimationDuration: const Duration(milliseconds: 150),
                     swapAnimationCurve: Curves.linear,
                     PieChartData(
-                      sections: getExpenseSections(expensesByCategory),
+                      sections: getExpenseSections(),
                       borderData: FlBorderData(show: true),
                       centerSpaceRadius: 40,
                       sectionsSpace: 0,
@@ -61,15 +70,15 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
             const SizedBox(height: 16),
             Expanded(
               child: ListView(
-                children: expensesByCategory.keys.map((category) {
+                children: getFilteredRecords().map((record) {
                   return ListTile(
                     leading: Container(
                       width: 20,
                       height: 20,
                       color: getRandomColor(),
                     ),
-                    title: Text(category),
-                    subtitle: Text('Amount: ${expensesByCategory[category]}'),
+                    title: Text(record.category),
+                    subtitle: Text('Amount: ${record.amount}'),
                   );
                 }).toList(),
               ),
@@ -80,7 +89,9 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
     );
   }
 
-  List<PieChartSectionData> getExpenseSections(Map<String, double> expensesByCategory) {
+  List<PieChartSectionData> getExpenseSections() {
+    Map<String, double> expensesByCategory = getExpensesByCategory(
+        recordList, selectedType);
     List<PieChartSectionData> sections = [];
 
     expensesByCategory.forEach((category, amount) {
@@ -91,7 +102,8 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
           title: '$category\n$amount',
           showTitle: true,
           radius: 100,
-          titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          titleStyle: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       );
     });
@@ -99,20 +111,54 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
     return sections;
   }
 
-  Color getRandomColor() {
-    List<Color> colors = [Colors.red, Colors.blue, Colors.green, Colors.yellow, Colors.orange];
-    return colors[DateTime.now().millisecondsSinceEpoch % colors.length];
+  List<MoneyRecord> getFilteredRecords() {
+    return recordList.where((record) => record.type == selectedType).toList();
   }
 
-  Map<String, double> getExpensesByCategory(List<MoneyRecord> records) {
+  Color getRandomColor() {
+    List<Color> colors = [
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.yellow,
+      Colors.orange
+    ];
+    return colors[DateTime
+        .now()
+        .millisecondsSinceEpoch % colors.length];
+  }
+
+  void _openFilterScreen(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return MoneyRecordFilterScreen(
+          onFilterChanged: (MoneyRecordType type) {
+            _handleFilterChanged(type);
+            Navigator.pop(context);
+          }, selectedType: MoneyRecordType.expense,
+        );
+      },
+    );
+  }
+
+  void _handleFilterChanged(MoneyRecordType type) {
+    setState(() {
+      selectedType = type;
+    });
+  }
+
+  Map<String, double> getExpensesByCategory(List<MoneyRecord> records,
+      MoneyRecordType type) {
     Map<String, double> expensesByCategory = {};
 
     for (MoneyRecord record in records) {
-      if (record.type == MoneyRecordType.expense) {
+      if (record.type == type) {
         String category = record.category;
 
         if (expensesByCategory.containsKey(category)) {
-          expensesByCategory[category] = expensesByCategory[category]! + record.amount;
+          expensesByCategory[category] =
+              expensesByCategory[category]! + record.amount;
         } else {
           expensesByCategory[category] = record.amount;
         }
@@ -122,5 +168,3 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
     return expensesByCategory;
   }
 }
-
-

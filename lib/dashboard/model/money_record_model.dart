@@ -31,4 +31,4 @@ class MoneyRecord {
 }
 
 
-enum MoneyRecordType { income, expense }
+enum MoneyRecordType { income, expense, all }

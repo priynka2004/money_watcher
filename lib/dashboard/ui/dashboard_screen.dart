@@ -27,7 +27,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             setState(() {
               _selectedIndex = index;
               setState(() {
-
               });
             });
           },

@@ -187,3 +187,4 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
     moneyProvider.getMoneyRecords();
   }
 }
+
