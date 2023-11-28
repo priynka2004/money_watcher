@@ -18,6 +18,7 @@ class MoneyRecordListScreen extends StatefulWidget {
 
 class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
   late MoneyRecordType filterType = MoneyRecordType.all;
+  String selectedCategory = ''; // Add this variable for category filtering
 
   @override
   void initState() {
@@ -49,7 +50,7 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
       body: Consumer<MoneyRecordProvider>(
         builder: (context, moneyRecordProvider, widget) {
           List<MoneyRecord> filteredRecords =
-          applyFilter(moneyRecordProvider.moneyRecordList);
+              applyFilter(moneyRecordProvider.moneyRecordList);
           return Padding(
             padding: const EdgeInsets.all(16),
             child: ListView.separated(
@@ -81,10 +82,10 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                            return MoneyRecordDetailScreen(
-                              moneyRecord: moneyRecord,
-                            );
-                          }));
+                        return MoneyRecordDetailScreen(
+                          moneyRecord: moneyRecord,
+                        );
+                      }));
                     },
                     child: MoneyRecordListItemWidget(
                       moneyRecord: moneyRecord,
@@ -105,7 +106,7 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
 
   Future fetchMoneyRecord() async {
     final moneyProvider =
-    Provider.of<MoneyRecordProvider>(context, listen: false);
+        Provider.of<MoneyRecordProvider>(context, listen: false);
     moneyProvider.getMoneyRecords();
   }
 
@@ -150,7 +151,7 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
 
   Future deleteMoneyRecord(int id) async {
     MoneyRecordProvider moneyRecordProvider =
-    Provider.of<MoneyRecordProvider>(context, listen: false);
+        Provider.of<MoneyRecordProvider>(context, listen: false);
     await moneyRecordProvider.deleteMoneyRecord(id);
     if (moneyRecordProvider.error == null) {
       moneyRecordProvider.getMoneyRecords();
@@ -161,15 +162,15 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
     showModalBottomSheet(
       context: context,
       builder: (context) => MoneyRecordFilterScreen(
-        selectedType: filterType,
-        onFilterChanged: (MoneyRecordType? selectedType) {
-          if (selectedType != null) {
-            setState(() {
-              filterType = selectedType;
-            });
-          }
+        onFilterChanged: (MoneyRecordType type, String category) {
+          setState(() {
+            filterType = type;
+            selectedCategory = category; // Update the selected category
+          });
           Navigator.pop(context);
         },
+        initialSelectedType: MoneyRecordType.expense,
+        initialSelectedCategory: selectedCategory, // Pass the selected category
       ),
     );
   }
@@ -178,7 +179,14 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
     if (filterType == MoneyRecordType.all) {
       return records;
     } else {
-      return records.where((record) => record.type == filterType).toList();
+      return records
+          .where(
+            (record) =>
+                record.type == filterType &&
+                (selectedCategory.isEmpty ||
+                    record.category == selectedCategory),
+          )
+          .toList();
     }
   }
 }

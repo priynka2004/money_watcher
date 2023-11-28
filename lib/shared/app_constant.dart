@@ -1,5 +1,4 @@
 class AppConstant {
-
   static final List<String> _categories = [
     'Grocery',
     'Fuel',

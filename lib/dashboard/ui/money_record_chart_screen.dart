@@ -14,8 +14,8 @@ class MoneyRecordChartScreen extends StatefulWidget {
 
 class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
   List<MoneyRecord> recordList = [];
-  MoneyRecordType selectedType = MoneyRecordType
-      .expense;
+  MoneyRecordType selectedType = MoneyRecordType.expense;
+  String selectedCategory = '';
 
   @override
   void initState() {
@@ -91,7 +91,7 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
 
   List<PieChartSectionData> getExpenseSections() {
     Map<String, double> expensesByCategory = getExpensesByCategory(
-        recordList, selectedType);
+        recordList, selectedType, selectedCategory);
     List<PieChartSectionData> sections = [];
 
     expensesByCategory.forEach((category, amount) {
@@ -112,7 +112,11 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
   }
 
   List<MoneyRecord> getFilteredRecords() {
-    return recordList.where((record) => record.type == selectedType).toList();
+    return recordList
+        .where((record) =>
+    record.type == selectedType &&
+        (selectedCategory.isEmpty || record.category == selectedCategory))
+        .toList();
   }
 
   Color getRandomColor() {
@@ -133,38 +137,39 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
       context: context,
       builder: (BuildContext context) {
         return MoneyRecordFilterScreen(
-          onFilterChanged: (MoneyRecordType type) {
-            _handleFilterChanged(type);
+          onFilterChanged: (MoneyRecordType type, String category) {
+            _handleFilterChanged(type, category);
             Navigator.pop(context);
-          }, selectedType: MoneyRecordType.expense,
+          },
+          initialSelectedType: selectedType,
+          initialSelectedCategory: selectedCategory,
         );
       },
     );
   }
 
-  void _handleFilterChanged(MoneyRecordType type) {
+  void _handleFilterChanged(MoneyRecordType type, String category) {
     setState(() {
       selectedType = type;
+      selectedCategory = category;
     });
   }
-
-  Map<String, double> getExpensesByCategory(List<MoneyRecord> records,
-      MoneyRecordType type) {
+  Map<String, double> getExpensesByCategory(
+      List<MoneyRecord> records, MoneyRecordType type, String category) {
     Map<String, double> expensesByCategory = {};
-
     for (MoneyRecord record in records) {
-      if (record.type == type) {
-        String category = record.category;
+      if (record.type == type &&
+          (category.isEmpty || record.category == category)) {
+        String recordCategory = record.category;
 
-        if (expensesByCategory.containsKey(category)) {
-          expensesByCategory[category] =
-              expensesByCategory[category]! + record.amount;
+        if (expensesByCategory.containsKey(recordCategory)) {
+          expensesByCategory[recordCategory] =
+              record.amount;
         } else {
-          expensesByCategory[category] = record.amount;
+          expensesByCategory[recordCategory] = record.amount;
         }
       }
     }
-
     return expensesByCategory;
   }
 }
