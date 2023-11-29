@@ -41,9 +41,11 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
             onPressed: openFilterScreen,
           ),
           // Add the clear filter button
-          IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: clearFilter,
+          Visibility(visible: filterType != MoneyRecordType.all ,
+            child: IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: clearFilter,
+            ),
           ),
         ],
       ),
@@ -201,4 +203,5 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
       selectedCategory = '';
     });
   }
+
 }

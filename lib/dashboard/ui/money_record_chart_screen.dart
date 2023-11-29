@@ -44,9 +44,11 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
             },
             icon: const Icon(Icons.filter_list),
           ),
-          IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: clearFilter,
+          Visibility(visible: selectedType != MoneyRecordType.all,
+            child: IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: clearFilter,
+            ),
           ),
         ],
       ),
@@ -124,31 +126,32 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
       return recordList;
     }
 
-    Map<String, MoneyRecord> categoryRecordMap = {};
+    Map<String, double> categoryRecord = {};
 
     for (MoneyRecord record in recordList) {
       if (record.type == selectedType &&
           (selectedCategory.isEmpty || record.category == selectedCategory)) {
         // Check if the category is already in the map
-        if (categoryRecordMap.containsKey(record.category)) {
+        if (categoryRecord.containsKey(record.category)) {
           // If yes, update the existing entry by adding the amount
-          categoryRecordMap[record.category]?.amount =
-              (categoryRecordMap[record.category]?.amount ?? 0 + record.amount);
+          categoryRecord[record.category] =
+              (categoryRecord[record.category] ?? 0) + record.amount;
         } else {
-          // If no, create a new entry in the map
-          categoryRecordMap[record.category] = MoneyRecord(
-            type: selectedType,
-            category: record.category,
-            amount: record.amount,
-            date: record.date,
-            title: record.title, // Include other fields here
-          );
+          categoryRecord[record.category] = record.amount;
         }
       }
     }
 
-    // Extract the values from the map to get the final filtered list
-    List<MoneyRecord> filteredRecords = categoryRecordMap.values.toList();
+    // Create MoneyRecord objects for each category with the total amounts
+    List<MoneyRecord> filteredRecords = categoryRecord.entries.map((record) {
+      return MoneyRecord(
+        type: selectedType,
+        category: record.key,
+        amount: record.value,
+        date: DateTime.now().microsecondsSinceEpoch, // Use a valid DateTime object
+        title: '', // Add an appropriate default value
+      );
+    }).toList();
 
     return filteredRecords;
   }
