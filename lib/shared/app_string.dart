@@ -22,4 +22,16 @@ const String addTextButton = "Add Record";
 const String recordAddMsg = "Record added successfully!";
 const String editTextButton = "Edit Record";
 const String recordEditMsg = "Record updated successfully!";
+const String moneyRecordChart = "Money Record Chart";
+const String filterAppbar = "Filter";
+const String filterTypeText = "Filter by type";
+const String filterCategoryText = "Filter by category";
+const String filterChipTextAll = "All";
+const String filterChipTextIncome = "Income";
+const String filterChipTextExpense = "Expense";
+const String moneyRecordListAppbarText = "Money Records";
+const String moneyRecordDeleteTitleText = "Delete Alert";
+const String moneyRecordDeleteContentText = "Are you sure want to delete this?";
+const String moneyRecordDeleteButtonText = "Cancel";
+const String moneyRecordDeleteButtonTextOkay = "Okay";
 

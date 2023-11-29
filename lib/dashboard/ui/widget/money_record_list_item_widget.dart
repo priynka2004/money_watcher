@@ -3,7 +3,7 @@ import 'package:money_watcher/dashboard/model/money_record_model.dart';
 import 'package:money_watcher/shared/app_colors.dart';
 
 class MoneyRecordListItemWidget extends StatelessWidget {
-  const MoneyRecordListItemWidget({super.key, required this.moneyRecord});
+  const MoneyRecordListItemWidget({super.key, required this.moneyRecord, });
   final MoneyRecord moneyRecord;
 
   @override
