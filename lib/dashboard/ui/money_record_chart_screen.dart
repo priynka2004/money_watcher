@@ -231,10 +231,10 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
           expensesByCategory[recordCategory] ??= 0; // Initialize to 0 if null
           expensesByCategory[recordCategory] =
               (expensesByCategory[recordCategory] ?? 0) +
-                  (record.amount ?? 0); // Add record.amount if not null
+                  (record.amount); // Add record.amount if not null
         } else {
           expensesByCategory[recordCategory] =
-              record.amount ?? 0; // Set to record.amount or 0 if null
+              record.amount; // Set to record.amount or 0 if null
         }
       }
     }
