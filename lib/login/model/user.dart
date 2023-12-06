@@ -1,9 +1,9 @@
-class User {
+class UserModel {
   String? name;
   String email;
   String password;
 
-  User({
+  UserModel({
     required this.email,
     required this.password,
     this.name,

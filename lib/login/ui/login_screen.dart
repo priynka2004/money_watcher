@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future loginUser() async {
-    User user = User(
+    UserModel user = UserModel(
       email: emailController.text,
       password: passwordController.text,
     );

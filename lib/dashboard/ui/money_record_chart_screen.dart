@@ -131,9 +131,7 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
     for (MoneyRecord record in recordList) {
       if (record.type == selectedType &&
           (selectedCategory.isEmpty || record.category == selectedCategory)) {
-        // Check if the category is already in the map
         if (categoryRecord.containsKey(record.category)) {
-          // If yes, update the existing entry by adding the amount
           categoryRecord[record.category] =
               (categoryRecord[record.category] ?? 0) + record.amount;
         } else {
@@ -142,14 +140,13 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
       }
     }
 
-    // Create MoneyRecord objects for each category with the total amounts
     List<MoneyRecord> filteredRecords = categoryRecord.entries.map((record) {
       return MoneyRecord(
         type: selectedType,
         category: record.key,
         amount: record.value,
-        date: DateTime.now().microsecondsSinceEpoch, // Use a valid DateTime object
-        title: '', // Add an appropriate default value
+        date: DateTime.now().microsecondsSinceEpoch,
+        title: '',
       );
     }).toList();
 
@@ -228,13 +225,13 @@ class _MoneyRecordChartScreenState extends State<MoneyRecordChartScreen> {
         String recordCategory = record.category;
 
         if (expensesByCategory.containsKey(recordCategory)) {
-          expensesByCategory[recordCategory] ??= 0; // Initialize to 0 if null
+          expensesByCategory[recordCategory] ??= 0;
           expensesByCategory[recordCategory] =
               (expensesByCategory[recordCategory] ?? 0) +
-                  (record.amount); // Add record.amount if not null
+                  (record.amount);
         } else {
           expensesByCategory[recordCategory] =
-              record.amount; // Set to record.amount or 0 if null
+              record.amount;
         }
       }
     }
