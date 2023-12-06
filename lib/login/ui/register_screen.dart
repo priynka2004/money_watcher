@@ -156,7 +156,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future registerUser() async {
-    User user = User(
+    UserModel user = UserModel(
       email: emailController.text,
       password: passwordController.text,
       name: nameController.text,
