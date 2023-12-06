@@ -23,6 +23,7 @@ class AuthService {
         password: userModel.password,
       );
     } catch (e) {
+
       rethrow;
     }
   }
