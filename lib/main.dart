@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:money_watcher/dashboard/provider/money_record_provider.dart';
+import 'package:money_watcher/dashboard/service/money_watcher_firebase_service.dart';
 import 'package:money_watcher/dashboard/ui/dashboard_screen.dart';
-import 'package:money_watcher/firebase_auth_service/auth_service.dart';
 import 'package:money_watcher/firebase_options.dart';
+import 'package:money_watcher/login/service/auth_service.dart';
 import 'package:money_watcher/login/provider/auth_provider.dart';
 import 'package:money_watcher/login/ui/login_screen.dart';
 import 'package:money_watcher/shared/app_colors.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
           },
         ),ChangeNotifierProvider(
           create: (context) {
-            return MoneyRecordProvider(databaseService);
+            return MoneyRecordProvider(MoneyWatcherFirebaseService());
           },
         ),
       ],
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: appColorScheme),
           useMaterial3: true,
         ),
-        home: const LoginScreen(),
+        home: const DashboardScreen(),
       ),
     );
   }

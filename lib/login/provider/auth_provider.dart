@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:money_watcher/firebase_auth_service/auth_service.dart';
+import 'package:money_watcher/login/service/auth_service.dart';
 import 'package:money_watcher/login/model/user.dart';
 import 'package:money_watcher/shared/app_util.dart';
 
 class AuthProvider extends ChangeNotifier {
-  AuthService   authService;
+  AuthService authService;
+
   AuthProvider(this.authService);
 
   bool isVisible = false;
@@ -51,5 +52,4 @@ class AuthProvider extends ChangeNotifier {
     }
     return false;
   }
-
 }

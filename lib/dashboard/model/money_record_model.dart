@@ -1,5 +1,5 @@
 class MoneyRecord {
-  int? id;
+  String? id;
   String title;
   double amount;
   String category;
@@ -16,6 +16,7 @@ class MoneyRecord {
   });
 
   factory MoneyRecord.fromJson(Map<String, dynamic> json) {
+    print(json.toString());
     return MoneyRecord(
       id: json['id'],
       title: json['title'],
@@ -28,7 +29,19 @@ class MoneyRecord {
       ),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'amount': amount,
+      'category': category,
+      'date': date,
+      'type': type.toString(),
+    };
+  }
 }
+
 
 
 enum MoneyRecordType { income, expense, all }

@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
+import 'package:money_watcher/dashboard/service/money_watcher_firebase_service.dart';
 import 'package:money_watcher/shared/app_util.dart';
-import 'package:money_watcher/shared/database_service.dart';
+
 
 class MoneyRecordProvider extends ChangeNotifier {
-  MoneyRecordProvider(this.databaseService);
+  MoneyRecordProvider(this.firebaseService);
 
   List<MoneyRecord> moneyRecordList = [];
-  DatabaseService databaseService;
+  MoneyWatcherFirebaseService firebaseService;
   bool isLoading = false;
   String? error;
 
-  Future addMoneyRecord(MoneyRecord moneyRecord) async {
+  Future<void> addMoneyRecord(MoneyRecord moneyRecord) async {
     try {
       error = null;
       isLoading = true;
       notifyListeners();
-      await databaseService.addMoneyRecord(moneyRecord);
+      await firebaseService.addMoneyRecord(moneyRecord);
     } catch (e) {
       error = e.toString();
     } finally {
@@ -25,12 +26,12 @@ class MoneyRecordProvider extends ChangeNotifier {
     }
   }
 
-  Future editMoneyRecord(MoneyRecord moneyRecord) async {
+  Future<void> editMoneyRecord(MoneyRecord moneyRecord) async {
     try {
       error = null;
       isLoading = true;
       notifyListeners();
-      await databaseService.editMoneyRecord(moneyRecord);
+      await firebaseService.editMoneyRecord(moneyRecord.id.toString(), moneyRecord);
     } catch (e) {
       error = e.toString();
     } finally {
@@ -39,12 +40,12 @@ class MoneyRecordProvider extends ChangeNotifier {
     }
   }
 
-  Future getMoneyRecords() async {
+  Future<void> getMoneyRecords() async {
     try {
       error = null;
       isLoading = true;
       notifyListeners();
-      moneyRecordList = await databaseService.getMoneyRecords();
+      moneyRecordList = await firebaseService.fetchMoneyRecord();
       notifyListeners();
     } catch (e) {
       error = e.toString();
@@ -54,12 +55,13 @@ class MoneyRecordProvider extends ChangeNotifier {
     }
   }
 
-  Future deleteMoneyRecord(int id) async {
+  Future<void> deleteMoneyRecord(String id) async {
     try {
       error = null;
       isLoading = true;
       notifyListeners();
-      await databaseService.deleteMoneyRecord(id);
+      await firebaseService.deleteMoneyRecord(id);
+      getMoneyRecords();
     } catch (e) {
       error = e.toString();
       AppUtil.showToast(error!);

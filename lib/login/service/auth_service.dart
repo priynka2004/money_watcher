@@ -15,7 +15,6 @@ class AuthService {
     }
   }
 
-
   Future signUp(UserModel userModel) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -23,11 +22,9 @@ class AuthService {
         password: userModel.password,
       );
     } catch (e) {
-
       rethrow;
     }
   }
-
 
   Future logout() async {
     try {
