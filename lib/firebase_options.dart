@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     authDomain: 'fir-auth-a886a.firebaseapp.com',
     databaseURL: 'https://fir-auth-a886a-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'fir-auth-a886a.appspot.com',
+    measurementId: 'G-S81KH67L87',
   );
 
   static const FirebaseOptions android = FirebaseOptions(

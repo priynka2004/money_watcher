@@ -19,21 +19,25 @@ class MoneyWatcherFirebaseService {
     }
   }
 
+  Stream<DatabaseEvent> listenMoneyWatcher(){
+    return _reference.child('money_record').onValue;
+  }
+
   Future<List<MoneyRecord>> fetchMoneyRecord() async {
     DataSnapshot dataSnapshot = await _reference.child('money_record').get();
     if (dataSnapshot.exists) {
       dynamic map = dataSnapshot.value;
       if (map is Map<dynamic, dynamic>) {
-        List<MoneyRecord> userList = [];
+        List<MoneyRecord> moneyRecordList = [];
         map.forEach((key, value) {
           if (value is Map<dynamic, dynamic>) {
-            userList
+            moneyRecordList
                 .add(MoneyRecord.fromJson(Map<String, dynamic>.from(value)));
           }
         });
-        return userList;
+        return moneyRecordList;
       } else {
-        throw 'Invalid data format for moneyRecord';
+        throw 'Invalid data moneyRecord';
       }
     }
     throw 'MoneyRecord not found';

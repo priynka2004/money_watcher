@@ -35,14 +35,16 @@ class MyApp extends StatelessWidget {
           create: (context) {
             return AuthProvider(AuthService());
           },
-        ),ChangeNotifierProvider(
+        ),
+        ChangeNotifierProvider(
           create: (context) {
             return MoneyRecordProvider(MoneyWatcherFirebaseService());
           },
         ),
       ],
       child: MaterialApp(
-        title: appName,debugShowCheckedModeBanner: false,
+        title: appName,
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: appColorScheme),
           useMaterial3: true,

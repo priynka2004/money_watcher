@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:money_watcher/login/service/auth_service.dart';
-import 'package:money_watcher/login/model/user.dart';
+import 'package:money_watcher/login/model/user_model.dart';
 import 'package:money_watcher/shared/app_util.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -51,5 +51,20 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     }
     return false;
+  }
+
+  Future logoutUser(UserModel user) async {
+    isLoading = true;
+    error = null;
+    notifyListeners();
+    await Future.delayed(const Duration(seconds: 3));
+    try {
+      await authService.logout();
+    } catch (e) {
+      error = e.toString();
+      AppUtil.showToast(error!);
+    }
+    isLoading = false;
+    notifyListeners();
   }
 }

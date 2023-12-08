@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:money_watcher/login/model/user.dart';
+import 'package:money_watcher/login/model/user_model.dart';
 import 'package:money_watcher/login/provider/auth_provider.dart';
 import 'package:money_watcher/shared/app_colors.dart';
 import 'package:money_watcher/shared/app_string.dart';

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
 import 'package:money_watcher/dashboard/service/money_watcher_firebase_service.dart';
 import 'package:money_watcher/shared/app_util.dart';
@@ -23,6 +24,44 @@ class MoneyRecordProvider extends ChangeNotifier {
     } finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  void listenMoneyRecordChanges(){
+    Stream<DatabaseEvent> databaseEventStream = firebaseService.listenMoneyWatcher();
+    databaseEventStream.listen(onMoneyRecordChange);
+  }
+
+  void onMoneyRecordChange(DatabaseEvent databaseEvent){
+    try {
+      DataSnapshot dataSnapshot = databaseEvent.snapshot;
+      if (dataSnapshot.exists) {
+        dynamic map = dataSnapshot.value;
+
+        if (map is Map<dynamic, dynamic>) {
+          List<MoneyRecord> moneyRecordList = [];
+          map.forEach((key, value) {
+            if (value is Map<dynamic, dynamic>) {
+              moneyRecordList.add(
+                  MoneyRecord.fromJson(Map<String, dynamic>.from(value)));
+            }
+          });
+          this.moneyRecordList = moneyRecordList;
+          notifyListeners();
+        } else {
+          if (kDebugMode) {
+            print('Invalid data');
+          }
+        }
+      } else {
+        if (kDebugMode) {
+          print('Data not found');
+        }
+      }
+    }catch(e){
+      if (kDebugMode) {
+        print('$e');
+      }
     }
   }
 

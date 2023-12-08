@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:money_watcher/login/model/user.dart';
+import 'package:money_watcher/login/model/user_model.dart';
 
 class AuthService {
   Future<bool> login(UserModel userModel) async {

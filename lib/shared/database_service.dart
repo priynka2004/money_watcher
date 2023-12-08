@@ -1,5 +1,5 @@
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
-import 'package:money_watcher/login/model/user.dart';
+import 'package:money_watcher/login/model/user_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
