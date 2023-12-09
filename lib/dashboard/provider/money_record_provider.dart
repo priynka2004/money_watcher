@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
 import 'package:money_watcher/dashboard/service/money_watcher_firebase_service.dart';
+import 'package:money_watcher/shared/app_string.dart';
 import 'package:money_watcher/shared/app_util.dart';
 
 class MoneyRecordProvider extends ChangeNotifier {
@@ -50,12 +51,12 @@ class MoneyRecordProvider extends ChangeNotifier {
           notifyListeners();
         } else {
           if (kDebugMode) {
-            print('Invalid data');
+            print(invalidDataText);
           }
         }
       } else {
         if (kDebugMode) {
-          print('Data not found');
+          print(dataNotFoundText);
         }
       }
     } catch (e) {

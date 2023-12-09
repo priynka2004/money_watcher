@@ -1,13 +1,14 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
+import 'package:money_watcher/shared/app_string.dart';
 
 class MoneyWatcherFirebaseService {
   final DatabaseReference _reference = FirebaseDatabase.instance.ref();
 
   Future<void> addMoneyRecord(MoneyRecord moneyRecord) async {
     try {
-      DatabaseReference newRecordRef = _reference.child('money_record');
+      DatabaseReference newRecordRef = _reference.child(referenceText);
       String id = newRecordRef.push().key!;
       moneyRecord.id = id;
       await newRecordRef.child(id).set(moneyRecord.toJson());
@@ -20,11 +21,11 @@ class MoneyWatcherFirebaseService {
   }
 
   Stream<DatabaseEvent> listenMoneyWatcher(){
-    return _reference.child('money_record').onValue;
+    return _reference.child(referenceText).onValue;
   }
 
   Future<List<MoneyRecord>> fetchMoneyRecord() async {
-    DataSnapshot dataSnapshot = await _reference.child('money_record').get();
+    DataSnapshot dataSnapshot = await _reference.child(referenceText).get();
     if (dataSnapshot.exists) {
       dynamic map = dataSnapshot.value;
       if (map is Map<dynamic, dynamic>) {
@@ -37,15 +38,15 @@ class MoneyWatcherFirebaseService {
         });
         return moneyRecordList;
       } else {
-        throw 'Invalid data moneyRecord';
+        throw invalidDataText;
       }
     }
-    throw 'MoneyRecord not found';
+    throw dataNotFoundText;
   }
 
   Future<void> deleteMoneyRecord(String id) async {
     try {
-      await _reference.child('money_record').child(id).remove();
+      await _reference.child(referenceText).child(id).remove();
     } catch (error) {
       if (kDebugMode) {
         print('Error deleting moneyRecord: $error');
@@ -57,7 +58,7 @@ class MoneyWatcherFirebaseService {
   Future<void> editMoneyRecord(
       String id, MoneyRecord updatedInformation) async {
     try {
-      await _reference.child('money_record').child(id).update(updatedInformation.toJson());
+      await _reference.child(referenceText).child(id).update(updatedInformation.toJson());
     } catch (error) {
       if (kDebugMode) {
         print('Error updating moneyRecord: $error');
