@@ -4,7 +4,6 @@ import 'package:money_watcher/dashboard/model/money_record_model.dart';
 import 'package:money_watcher/dashboard/service/money_watcher_firebase_service.dart';
 import 'package:money_watcher/shared/app_util.dart';
 
-
 class MoneyRecordProvider extends ChangeNotifier {
   MoneyRecordProvider(this.firebaseService);
 
@@ -27,12 +26,13 @@ class MoneyRecordProvider extends ChangeNotifier {
     }
   }
 
-  void listenMoneyRecordChanges(){
-    Stream<DatabaseEvent> databaseEventStream = firebaseService.listenMoneyWatcher();
+  void listenMoneyRecordChanges() {
+    Stream<DatabaseEvent> databaseEventStream =
+        firebaseService.listenMoneyWatcher();
     databaseEventStream.listen(onMoneyRecordChange);
   }
 
-  void onMoneyRecordChange(DatabaseEvent databaseEvent){
+  void onMoneyRecordChange(DatabaseEvent databaseEvent) {
     try {
       DataSnapshot dataSnapshot = databaseEvent.snapshot;
       if (dataSnapshot.exists) {
@@ -42,8 +42,8 @@ class MoneyRecordProvider extends ChangeNotifier {
           List<MoneyRecord> moneyRecordList = [];
           map.forEach((key, value) {
             if (value is Map<dynamic, dynamic>) {
-              moneyRecordList.add(
-                  MoneyRecord.fromJson(Map<String, dynamic>.from(value)));
+              moneyRecordList
+                  .add(MoneyRecord.fromJson(Map<String, dynamic>.from(value)));
             }
           });
           this.moneyRecordList = moneyRecordList;
@@ -58,7 +58,7 @@ class MoneyRecordProvider extends ChangeNotifier {
           print('Data not found');
         }
       }
-    }catch(e){
+    } catch (e) {
       if (kDebugMode) {
         print('$e');
       }
@@ -70,7 +70,8 @@ class MoneyRecordProvider extends ChangeNotifier {
       error = null;
       isLoading = true;
       notifyListeners();
-      await firebaseService.editMoneyRecord(moneyRecord.id.toString(), moneyRecord);
+      await firebaseService.editMoneyRecord(
+          moneyRecord.id.toString(), moneyRecord);
     } catch (e) {
       error = e.toString();
     } finally {

@@ -20,8 +20,7 @@ class MoneyWatcherFirebaseService {
   }
 
   Stream<DatabaseEvent> listenMoneyWatcher(){
-    return _reference.child('money_record').onValue
-    ;
+    return _reference.child('money_record').onValue;
   }
 
   Future<List<MoneyRecord>> fetchMoneyRecord() async {

@@ -26,7 +26,8 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
     Future.delayed(Duration.zero, () {
       fetchMoneyRecord();
     });
-    Provider.of<MoneyRecordProvider>(context, listen: false).listenMoneyRecordChanges();
+    Provider.of<MoneyRecordProvider>(context, listen: false)
+        .listenMoneyRecordChanges();
     super.initState();
   }
 
@@ -41,7 +42,8 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
             onPressed: openFilterScreen,
           ),
           // Add the clear filter button
-          Visibility(visible: filterType != MoneyRecordType.all ,
+          Visibility(
+            visible: filterType != MoneyRecordType.all,
             child: IconButton(
               icon: const Icon(Icons.clear),
               onPressed: clearFilter,
@@ -56,7 +58,7 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
       body: Consumer<MoneyRecordProvider>(
         builder: (context, moneyRecordProvider, widget) {
           List<MoneyRecord> filteredRecords =
-          applyFilter(moneyRecordProvider.moneyRecordList);
+              applyFilter(moneyRecordProvider.moneyRecordList);
           return Padding(
             padding: const EdgeInsets.all(16),
             child: ListView.separated(
@@ -88,10 +90,10 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                            return MoneyRecordDetailScreen(
-                              moneyRecord: moneyRecord,
-                            );
-                          }));
+                        return MoneyRecordDetailScreen(
+                          moneyRecord: moneyRecord,
+                        );
+                      }));
                     },
                     child: MoneyRecordListItemWidget(
                       moneyRecord: moneyRecord,
@@ -112,7 +114,7 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
 
   Future fetchMoneyRecord() async {
     final moneyProvider =
-    Provider.of<MoneyRecordProvider>(context, listen: false);
+        Provider.of<MoneyRecordProvider>(context, listen: false);
     moneyProvider.listenMoneyRecordChanges();
   }
 
@@ -132,7 +134,7 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
             ),
             TextButton(
               onPressed: () {
-                if(moneyRecord.id!=null) {
+                if (moneyRecord.id != null) {
                   deleteMoneyRecord(moneyRecord.id!);
                   Navigator.of(context).pop();
                 }
@@ -157,10 +159,9 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
     }));
   }
 
-
   Future deleteMoneyRecord(String id) async {
     MoneyRecordProvider moneyRecordProvider =
-    Provider.of<MoneyRecordProvider>(context, listen: false);
+        Provider.of<MoneyRecordProvider>(context, listen: false);
     await moneyRecordProvider.deleteMoneyRecord(id);
     if (moneyRecordProvider.error == null) {
       moneyRecordProvider.getMoneyRecords();
@@ -177,7 +178,6 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
             filterType = type;
             selectedCategory = category;
           });
-
         },
         initialSelectedType: filterType,
         initialSelectedCategory: selectedCategory,
@@ -192,10 +192,10 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
       return records
           .where(
             (record) =>
-        record.type == filterType &&
-            (selectedCategory.isEmpty ||
-                record.category == selectedCategory),
-      )
+                record.type == filterType &&
+                (selectedCategory.isEmpty ||
+                    record.category == selectedCategory),
+          )
           .toList();
     }
   }
@@ -206,5 +206,4 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
       selectedCategory = '';
     });
   }
-
 }
