@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
 import 'package:money_watcher/shared/app_colors.dart';
@@ -29,6 +30,12 @@ class _MoneyRecordDetailScreenState extends State<MoneyRecordDetailScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              if (widget.moneyRecord.path.isNotEmpty)
+                Image.file(
+                  File(widget.moneyRecord.path),
+                  height: 300,
+                ),
+              const SizedBox(height: 26,),
               moneyRecordRow(
                 label: 'Name',
                 value: widget.moneyRecord.title,

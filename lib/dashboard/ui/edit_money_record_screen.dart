@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
 import 'package:money_watcher/dashboard/provider/money_record_provider.dart';
 import 'package:money_watcher/shared/app_colors.dart';
@@ -21,6 +22,8 @@ class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   late String selectedCategory;
+  List<String> imagePath = [];
+  late XFile? imageFile;
 
   int selectedDate = DateTime.now().millisecondsSinceEpoch;
   MoneyRecordType selectedType = MoneyRecordType.expense;
@@ -34,7 +37,8 @@ class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
     amountController.text = widget.moneyRecord.amount.toString();
     selectedDate = widget.moneyRecord.date;
     selectedType = widget.moneyRecord.type;
-    super.initState();
+    imagePath.add(widget.moneyRecord.path);
+      super.initState();
   }
 
   @override
@@ -99,6 +103,16 @@ class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
                 ],
               ),
               const SizedBox(height: 16),
+              if (imagePath.isNotEmpty)
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: Image.network(
+                    imagePath.first,
+                    height: 100,
+                    width: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -173,6 +187,7 @@ class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
       category: selectedCategory,
       date: selectedDate,
       type: selectedType,
+      path: imagePath.isNotEmpty ? imagePath.first : null.toString(),
     );
 
     final moneyProvider =

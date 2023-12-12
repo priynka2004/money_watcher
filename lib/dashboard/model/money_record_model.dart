@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class MoneyRecord {
   String? id;
   String title;
@@ -5,6 +7,7 @@ class MoneyRecord {
   String category;
   int date;
   MoneyRecordType type;
+  String path;
 
   MoneyRecord({
     this.id,
@@ -13,10 +16,13 @@ class MoneyRecord {
     required this.category,
     required this.date,
     this.type = MoneyRecordType.expense,
+    this.path = '',
   });
 
   factory MoneyRecord.fromJson(Map<String, dynamic> json) {
-    print(json.toString());
+    if (kDebugMode) {
+      print(json.toString());
+    }
     return MoneyRecord(
       id: json['id'],
       title: json['title'],
@@ -24,9 +30,10 @@ class MoneyRecord {
       category: json['category'],
       date: json['date'],
       type: MoneyRecordType.values.firstWhere(
-            (type) => type.toString() == json['type'],
+        (type) => type.toString() == json['type'],
         orElse: () => MoneyRecordType.expense,
       ),
+      path: json['path'],
     );
   }
 
@@ -38,10 +45,9 @@ class MoneyRecord {
       'category': category,
       'date': date,
       'type': type.toString(),
+      'path': path,
     };
   }
 }
-
-
 
 enum MoneyRecordType { income, expense, all }
