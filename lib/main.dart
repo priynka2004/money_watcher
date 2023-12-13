@@ -13,6 +13,7 @@ import 'package:money_watcher/shared/app_colors.dart';
 import 'package:money_watcher/shared/app_string.dart';
 import 'package:money_watcher/shared/database_service.dart';
 import 'package:provider/provider.dart';
+import 'firebase_remote_service/firebase_remote_configure_service.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +46,13 @@ Future main() async {
     }
     return true;
   };
+  try {
+    await FirebaseRemoteConfigService.init();
+  } catch (e) {
+    if (kDebugMode) {
+      print('Not Found:$e');
+    }
+  }
   runApp(MyApp(databaseService: databaseService));
 }
 
@@ -75,7 +83,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: appColorScheme),
           useMaterial3: true,
         ),
-        home: const DashboardScreen(),
+        home: FirebaseRemoteConfigService.dashBordScreen? const LoginScreen()
+            : const DashboardScreen(),
       ),
     );
   }

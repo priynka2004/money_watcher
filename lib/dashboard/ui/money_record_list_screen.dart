@@ -6,7 +6,7 @@ import 'package:money_watcher/dashboard/ui/add_money_record_screen.dart';
 import 'package:money_watcher/dashboard/ui/edit_money_record_screen.dart';
 import 'package:money_watcher/dashboard/ui/money_record_detail_screen.dart';
 import 'package:money_watcher/dashboard/ui/money_record_fitter_screen.dart';
-import 'package:money_watcher/dashboard/ui/widget/money_record_list_item_widget.dart';
+import 'package:money_watcher/dashboard/widget/money_record_list_item_widget.dart';
 import 'package:money_watcher/shared/app_string.dart';
 import 'package:provider/provider.dart';
 

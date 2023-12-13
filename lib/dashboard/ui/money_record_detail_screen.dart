@@ -30,12 +30,6 @@ class _MoneyRecordDetailScreenState extends State<MoneyRecordDetailScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (widget.moneyRecord.path.isNotEmpty)
-                Image.file(
-                  File(widget.moneyRecord.path),
-                  height: 300,
-                ),
-              const SizedBox(height: 26,),
               moneyRecordRow(
                 label: 'Name',
                 value: widget.moneyRecord.title,
@@ -48,6 +42,11 @@ class _MoneyRecordDetailScreenState extends State<MoneyRecordDetailScreen> {
                 label: 'Category',
                 value: widget.moneyRecord.category,
               ),
+              if (widget.moneyRecord.path.isNotEmpty)
+                Image.file(
+                  File(widget.moneyRecord.path),
+                  height: 500,
+                ),
             ],
           ),
         ),

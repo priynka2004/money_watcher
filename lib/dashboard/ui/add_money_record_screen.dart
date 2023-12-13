@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
@@ -97,7 +98,9 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
                         setState(() {
                           imagePath = image.path;
                         });
-                        print("Image path from gallery: ${image.path}");
+                        if (kDebugMode) {
+                          print("Image path from gallery: ${image.path}");
+                        }
                       }
                     },
                     icon: const Icon(Icons.image),
@@ -111,14 +114,16 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
                         setState(() {
                           imagePath = image.path;
                         });
-                        print("Image path from camera: ${image.path}");
+                        if (kDebugMode) {
+                          print("Image path from camera: ${image.path}");
+                        }
                       }
                     },
                     icon: const Icon(Icons.camera_alt),
                   ),
                 ],
               ),
-              //buildImageList(),
+              buildImageList(),
               const SizedBox(height: 80),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -184,26 +189,34 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
     );
   }
 
-  // Widget buildImageList() {
-  //   return Container(
-  //     height: 80,
-  //     child: ListView.builder(
-  //       scrollDirection: Axis.horizontal,
-  //       itemCount: imagePath.length,
-  //       itemBuilder: (context, index) {
-  //         return Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-  //           child: Image.file(
-  //             File(imagePath[index]),
-  //             width: 80,
-  //             height: 80,
-  //             fit: BoxFit.cover,
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
+  Widget buildImageList() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Container(
+          height: 150,
+          width: 250,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: imagePath.isNotEmpty ? 1 : 0,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Image.file(
+                  File(imagePath),
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -227,7 +240,7 @@ class AddMoneyRecordScreenState extends State<AddMoneyRecordScreen> {
       category: selectedCategory,
       date: selectedDate,
       type: selectedType,
-      path: imagePath.toString(),
+      path: imagePath,
     );
 
     final moneyProvider =

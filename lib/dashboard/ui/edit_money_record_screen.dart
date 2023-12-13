@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:money_watcher/dashboard/model/money_record_model.dart';
@@ -22,8 +23,8 @@ class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   late String selectedCategory;
-  List<String> imagePath = [];
-  late XFile? imageFile;
+  String imagePath = '';
+
 
   int selectedDate = DateTime.now().millisecondsSinceEpoch;
   MoneyRecordType selectedType = MoneyRecordType.expense;
@@ -37,7 +38,7 @@ class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
     amountController.text = widget.moneyRecord.amount.toString();
     selectedDate = widget.moneyRecord.date;
     selectedType = widget.moneyRecord.type;
-    imagePath.add(widget.moneyRecord.path);
+    imagePath=widget.moneyRecord.path;
       super.initState();
   }
 
@@ -103,16 +104,7 @@ class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              if (imagePath.isNotEmpty)
-                Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  child: Image.network(
-                    imagePath.first,
-                    height: 100,
-                    width: 100,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -135,6 +127,42 @@ class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
                       });
                     },
                     title: radioTextExpense,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      XFile? image =
+                      await ImagePicker().pickImage(source: ImageSource.gallery);
+                      if (image != null) {
+                        setState(() {
+                          imagePath = image.path;
+                        });
+                        if (kDebugMode) {
+                          print("Image path from gallery: ${image.path}");
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.image),
+                  ),
+                  const SizedBox(height: 12),
+                  IconButton(
+                    onPressed: () async {
+                      XFile? image =
+                      await ImagePicker().pickImage(source: ImageSource.camera);
+                      if (image != null) {
+                        setState(() {
+                          imagePath = image.path;
+                        });
+                        if (kDebugMode) {
+                          print("Image path from camera: ${image.path}");
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.camera_alt),
                   ),
                 ],
               ),
@@ -187,7 +215,7 @@ class EditMoneyRecordScreenState extends State<EditMoneyRecordScreen> {
       category: selectedCategory,
       date: selectedDate,
       type: selectedType,
-      path: imagePath.isNotEmpty ? imagePath.first : null.toString(),
+      path: imagePath,
     );
 
     final moneyProvider =
