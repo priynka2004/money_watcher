@@ -187,18 +187,20 @@ class _MoneyRecordListScreenState extends State<MoneyRecordListScreen> {
 
   List<MoneyRecord> applyFilter(List<MoneyRecord> records) {
     if (filterType == MoneyRecordType.all) {
-      return records;
+      return records
+          .where((record) =>
+      selectedCategory.isEmpty || record.category == selectedCategory)
+          .toList();
     } else {
       return records
-          .where(
-            (record) =>
-                record.type == filterType &&
-                (selectedCategory.isEmpty ||
-                    record.category == selectedCategory),
-          )
+          .where((record) =>
+      record.type == filterType &&
+          (selectedCategory.isEmpty ||
+              record.category == selectedCategory))
           .toList();
     }
   }
+
 
   void clearFilter() {
     setState(() {
